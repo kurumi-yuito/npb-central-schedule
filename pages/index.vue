@@ -140,7 +140,7 @@ function sharePage() {
     navigator.share({
       title: '2026 セ・リーグ日程検索',
       text: 'セ・リーグの全試合日程を検索する',
-      url: 'https://npb-schedule.pages.dev'
+      url: 'https://npb-central-schedule.pages.dev/'
     }).catch(() => { /* キャンセル時は何もしない */ })
   } else {
     // Web Share非対応ブラウザ用フォールバック

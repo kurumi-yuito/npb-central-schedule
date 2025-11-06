@@ -1340,7 +1340,7 @@ async function errorHandler(error, event) {
 
 const rootDir = "/home/kurumiyuito/npb-central-schedule";
 
-const appHead = {"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"}],"link":[],"style":[],"script":[],"noscript":[],"title":"2026 セ・リーグ日程検索"};
+const appHead = {"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"}],"link":[{"rel":"icon","type":"image/png","href":"/favicon.png"}],"style":[],"script":[],"noscript":[],"title":"2026 セ・リーグ日程検索"};
 
 const appRootTag = "div";
 
