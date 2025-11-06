@@ -1,0 +1,17 @@
+{
+  "name": "npb-nuxt-listonly",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev -o",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview"
+  },
+  "devDependencies": {
+    "nuxt": "^3.13.0"
+  },
+  "engines": {
+    "node": "^18.18 || ^20.9 || ^22"
+  }
+}
