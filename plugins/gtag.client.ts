@@ -1,11 +1,11 @@
 // plugins/gtag.client.ts
 export default defineNuxtPlugin(() => {
   const id = useRuntimeConfig().public.gaId
-  if (!id) return
+  if (!id) return           // IDないなら無視
 
   const router = useRouter()
 
-  // 初回
+  // 初回ページビュー
   router.isReady().then(() => {
     // @ts-ignore
     window.gtag?.('event', 'page_view', {
@@ -15,7 +15,7 @@ export default defineNuxtPlugin(() => {
     })
   })
 
-  // 以降の遷移
+  // ルート遷移ごとにページビュー
   router.afterEach((to) => {
     // @ts-ignore
     window.gtag?.('event', 'page_view', {
