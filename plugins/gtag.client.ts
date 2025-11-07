@@ -1,9 +1,14 @@
 // plugins/gtag.client.ts
 export default defineNuxtPlugin(() => {
-  const id = useRuntimeConfig().public.gaId
-  if (!id) return
+  const cfg = useRuntimeConfig()
+  const id = cfg.public.gaId
+  console.log('[client] gaId =', id) 
+  if (!id) {
+    console.warn('[GA4] NUXT_PUBLIC_GA_ID が空やで')
+    return
+  }
 
-  // gtag.js を動的ロード
+  // gtag.js 読み込み
   const s = document.createElement('script')
   s.async = true
   s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`
@@ -18,17 +23,31 @@ export default defineNuxtPlugin(() => {
   window.gtag = gtag
   // @ts-ignore
   gtag('js', new Date())
+  // SPAやから自動 page_view は切って手動で送る
   // @ts-ignore
-  gtag('config', id, { send_page_view: false }) // ルート遷移で手動送信するため
+  gtag('config', id, { send_page_view: false })
 
-  // ルート遷移ごとに page_view を送る（SPA 用）
   const router = useRouter()
-  router.afterEach((to) => {
+
+  // ★ 初回ロード分を必ず送る（これ無いとリアルタイムに出えへんこと多い）
+  router.isReady().then(() => {
     // @ts-ignore
     window.gtag?.('event', 'page_view', {
       page_title: document.title,
       page_location: location.href,
-      page_path: to.fullPath
+      page_path: router.currentRoute.value.fullPath,
+      // デバッグ時に DebugView に出す
+      debug_mode: import.meta.env.DEV ? true : undefined
+    })
+    // ★ その後の遷移も送る
+    router.afterEach((to) => {
+      // @ts-ignore
+      window.gtag?.('event', 'page_view', {
+        page_title: document.title,
+        page_location: location.href,
+        page_path: to.fullPath,
+        debug_mode: import.meta.env.DEV ? true : undefined
+      })
     })
   })
 })
