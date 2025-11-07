@@ -1,4 +1,4 @@
-console.log('[build] NUXT_PUBLIC_GA_ID =', process.env.NUXT_PUBLIC_GA_ID)
+const GA = process.env.NUXT_PUBLIC_GA_ID || ''
 export default defineNuxtConfig({
   ssr: false,
   app: {
@@ -12,9 +12,20 @@ export default defineNuxtConfig({
   },
   nitro: { preset: 'static' },
   devtools: { enabled: false },
+  script: GA ? [
+        { src: `https://www.googletagmanager.com/gtag/js?id=${GA}`, async: true },
+        {
+          children: `
+            window.dataLayer=window.dataLayer||[];
+            function gtag(){dataLayer.push(arguments)}
+            gtag('js', new Date());
+            gtag('config', '${GA}', { send_page_view: false });
+          `
+        }
+  ] : [],
   runtimeConfig: {
     public: {
-      gaId: process.env.NUXT_PUBLIC_GA_ID || ''
+      gaId: GA  // ← ついでに公開設定にも入れておく（プラグイン側で参照）
     }
   }
 })
