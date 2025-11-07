@@ -1,4 +1,5 @@
-const GA = process.env.NUXT_PUBLIC_GA_ID || ''
+const GA = 'G-MTV73L7G719'
+
 export default defineNuxtConfig({
   ssr: false,
   app: {
