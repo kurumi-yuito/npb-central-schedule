@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     }
   },
   nitro: { preset: 'static' },
-  devtools: { enabled: false }
+  devtools: { enabled: false },
   runtimeConfig: {
     public: {
       gaId: process.env.NUXT_PUBLIC_GA_ID || ''
