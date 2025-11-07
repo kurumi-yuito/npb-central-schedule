@@ -1,3 +1,4 @@
+console.log('[build] NUXT_PUBLIC_GA_ID =', process.env.NUXT_PUBLIC_GA_ID)
 export default defineNuxtConfig({
   ssr: false,
   app: {
