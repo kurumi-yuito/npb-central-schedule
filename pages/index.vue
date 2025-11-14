@@ -51,7 +51,7 @@
             <option value="JINGU">神宮</option>
             <option value="YOKOHAMA">横浜</option>
             <option value="TOKYO_D">東京D</option>
-            <option value="BANTERIN_D">バンテリンドーム</option>
+            <option value="BANTERIN_D">バンテリンD</option>
             <option value="MAZDA">マツダ</option>
             <option value="OTHER">その他</option>
           </select>
@@ -59,14 +59,43 @@
 
         <button class="primary" type="button" @click="applySearch">検索</button>
         <button type="button" @click="clearAll">条件クリア</button>
-        <span class="hint">
-          ＜絞り込み条件仕様＞<br />
-          ・チームのみ／球場のみ／チーム+球場／チーム+ホーム/ビジター の4パターン<br />
-          ・「チーム」未選択の場合、「ホーム/ビジター」は非活性<br />
-          ・「チーム」「球場」選択済の場合、「ホーム/ビジター」は非活性<br />
-          ・「チーム」「ホーム/ビジター」選択済の場合、「球場」は非活性
-        </span>
       </div>
+
+      <div class="hint">
+          絞り込み条件について
+          <button
+            type="button"
+            class="hint-info"
+            @click="showHint = !showHint"
+            aria-label="絞り込み条件の説明"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </button>
+          <div v-if="showHint" class="hint-pop">
+            <p class="hint-pop-lead">
+              チームのみ／球場のみ／チーム+球場／チーム+ホーム/ビジター の4パターン
+            </p>
+            <ul>
+              <li>「チーム」未選択の場合、「ホーム/ビジター」は非活性</li>
+              <li>「チーム」「球場」選択済の場合、「ホーム/ビジター」は非活性</li>
+              <li>「チーム」「ホーム/ビジター」選択済の場合、「球場」は非活性</li>
+            </ul>
+          </div>
+        </div>
 
       <!-- 適用済みの条件だけ表示 -->
       <div v-if="searched" class="cond">
@@ -124,7 +153,7 @@
             </div>
           </div>
         </div>
-        <div class="muted" style="margin-top:6px;">表示範囲: 2026-02-01 ～ 2026-11-30</div>
+        <div class="muted" style="margin-top:6px;">表示範囲: 2026-03-01 ～ 2026-10-31</div>
       </section>
     </main>
   </div>
@@ -150,6 +179,8 @@ function sharePage() {
     )
   }
 }
+
+const showHint = ref(false)
 
 type Team = ''|'T'|'G'|'DB'|'S'|'C'|'D'
 type StadiumKey = ''|'KOSHIEN'|'JINGU'|'YOKOHAMA'|'TOKYO_D'|'BANTERIN_D'|'MAZDA'|'OTHER'
@@ -262,8 +293,8 @@ function clearAll(){
 }
 
 // カレンダー
-const currentYear=ref(2026),currentMonth=ref(1)
-const minYear=2026,minMonth=1,maxYear=2026,maxMonth=10
+const currentYear=ref(2026),currentMonth=ref(2)
+const minYear=2026,minMonth=1,maxYear=2026,maxMonth=9
 const canPrev=computed(()=>currentYear.value>minYear||currentMonth.value>minMonth)
 const canNext=computed(()=>currentYear.value<maxYear||currentMonth.value<maxMonth)
 function prevMonth(){ if(canPrev.value) currentMonth.value-- }
@@ -283,21 +314,132 @@ function openDate(iso:string){dateFilter.value=iso;searched.value=true;viewMode.
 </script>
 
 <style>
-.hd{padding:10px;border-bottom:1px solid #ddd;}
-.main{padding:16px;max-width:1100px;margin:0 auto;}
-.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:8px;}
-select,button{padding:8px 10px;font-size:14px;}
-button{border:1px solid #ddd;background:#fafafa;cursor:pointer;}
-.primary{background:#0b79d0;color:#fff;border-color:#0b79d0;}
-.hint{font-size:12px;color:#666;}
-.br-sm{display:none;}
-.cond{margin:6px 0 10px;font-size:14px;}
-.legend{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0 4px;font-size:13px;}
-.legend .sw{display:inline-block;width:16px;height:12px;border:1px solid #ddd;margin-right:4px;vertical-align:middle;}
-.tabs{display:flex;gap:8px;margin:8px 0;}
-.tabs button{padding:8px 12px;border:1px solid #ddd;background:#fafafa;cursor:pointer;}
-.tabs button.active{background:#fff;border-color:#0b79d0;color:#0b79d0;}
-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;}
+.hd {
+  padding:10px;
+  border-bottom:1px solid #ddd;
+}
+.main {
+  padding:16px;
+  max-width:1100px;
+  margin:0 auto;
+}
+.controls {
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:center;
+  margin-bottom:8px;
+}
+select,button {
+  padding:8px 10px;
+  font-size:14px;
+}
+button {
+  border:1px solid #ddd;
+  background:#fafafa;
+  cursor:pointer;
+}
+.primary {
+  background:#0b79d0;
+  color:#fff;
+  border-color:#0b79d0;
+}
+
+.hint {
+  position: relative;
+  font-size: 12px;
+  color: #666;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.hint-info {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  color: #0b79d0;
+  transition: opacity .15s ease;
+}
+.hint-info:hover {
+  opacity: 0.7;
+}
+.hint-info svg {
+  display: block;
+}
+.hint-pop {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  z-index: 10;
+  top: 50%;
+  left: calc(100% + 8px);
+  transform: translateY(-50%);
+  width: 480px;
+  max-width: 480px;
+  white-space: normal;
+}
+.hint-pop-lead {
+  margin: 0 0 4px;
+  font-size: 12px;
+}
+.hint-pop ul {
+  margin: 0;
+  padding-left: 1.1em;
+}
+.hint-pop li {
+  margin: 2px 0;
+}
+.br-sm {
+  display:none;
+}
+.cond {
+  margin:6px 0 10px;
+  font-size:14px;
+}
+.legend {
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin:8px 0 4px;
+  font-size:13px;
+}
+.legend .sw {
+  display:inline-block;
+  width:16px;
+  height:12px;
+  border:1px solid #ddd;
+  margin-right:4px;
+  vertical-align:middle;
+}
+.tabs {
+  display:flex;
+  gap:8px;
+  margin:8px 0;
+}
+.tabs button {
+  padding:8px 12px;
+  border:1px solid #ddd;
+  background:#fafafa;
+  cursor:pointer;
+}
+.tabs button.active {
+  background:#fff;
+  border-color:#0b79d0;
+  color:#0b79d0;
+}
+table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;font-size:14px;
+}
 th,td{border:1px solid #ddd;padding:6px;text-align:center;}
 th{background:#fafafa;}
 .muted{color:#666;}
@@ -316,9 +458,16 @@ th{background:#fafafa;}
   font-size: 12px;
   color: #666;
 }
-.report-text a { color:#0b79d0; text-decoration:none; }
-.report-text a:hover { text-decoration:underline; }
-.nowrap { white-space: nowrap; }
+.report-text a {
+  color:#0b79d0;
+  text-decoration:none;
+}
+.report-text a:hover {
+  text-decoration:underline;
+}
+.nowrap {
+  white-space: nowrap;
+}
 .share-btn {
   border: 1px solid #cfd9e0;
   background: #f8fbfd;
@@ -334,13 +483,11 @@ th{background:#fafafa;}
   transition: all .15s ease;
   box-shadow: 0 1px 1px rgba(0,0,0,0.05);
 }
-
 .share-btn:hover {
   background: #eaf5ff;
   border-color: #b4d4f7;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 }
-
 .share-btn svg {
   width: 15px;
   height: 15px;
@@ -353,6 +500,14 @@ th{background:#fafafa;}
     font-size: 22px;   /* ←好みで 18～22px に調整してくれ */
     line-height: 1.25;
     letter-spacing: .02em;
+  }
+  .hint-pop {
+    top: 100%;
+    left: 0;
+    transform: none;
+    margin-top: 4px;
+    width: calc(100vw - 32px); /* 画面左右に余白 */
+    max-width: calc(100vw - 32px);
   }
 }
 
